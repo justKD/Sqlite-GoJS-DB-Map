@@ -61,7 +61,8 @@ function load() {
                 fromSpot: go.Spot.AllSides,
                 toSpot: go.Spot.AllSides,
                 isShadowed: true,
-                shadowColor: "#C5C1AA"
+                shadowColor: "#C5C1AA",
+                deletable: false
             },
             new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
             // this rectangular shape surrounds the content of the node
@@ -106,7 +107,8 @@ function load() {
         $(go.Link,
             {
                 routing: go.Link.AvoidsNodes,
-                curve: go.Link.JumpGap
+                curve: go.Link.JumpGap,
+                deletable: false
             },
             $(go.Shape, { strokeWidth: 1.5 }, new go.Binding("stroke", "color")),
             $(go.Shape, { toArrow: "Standard" }, new go.Binding("stroke", "color"), new go.Binding("fill", "color"))
