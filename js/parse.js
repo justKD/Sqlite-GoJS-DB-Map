@@ -3,7 +3,6 @@ var currentScenario = 1;
 var answers = [];
 var questions = [];
 
-
 // 1 - School
 // 2 - exists but not implemented
 // 5 - Home
@@ -12,41 +11,45 @@ var questions = [];
 
 function init() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'mainDatabase.sqlite', true);
+    xhr.open('GET', 'https://raw.githubusercontent.com/systers/powerup-iOS/develop/Scenarios/mainDatabase.sqlite', true);
     xhr.responseType = 'arraybuffer';
 
     xhr.onload = function (e) {
-        let uInt8Array = new Uint8Array(this.response);
-        let db = new SQL.Database(uInt8Array);
-        let a = db.exec("SELECT * FROM Answer");
-        let q = db.exec("SELECT * FROM Question");
-
-        for (let i in a[0].values) {
-            let currentRecord = a[0].values[i];
-            let record = {
-                "AnswerID": currentRecord[0],
-                "QuestionID": currentRecord[1],
-                "ADescription": currentRecord[2],
-                "NextQID": currentRecord[3],
-                "Points": currentRecord[4],
-            }
-            answers.push(record);
-        }
-
-        for (let i in q[0].values) {
-            let currentRecord = q[0].values[i];
-            let record = {
-                "QuestionID": currentRecord[0],
-                "ScenarioID": currentRecord[1],
-                "QDescription": currentRecord[2]
-            }
-            questions.push(record);
-        }
-
-        load();
-
         let loader = document.getElementById("loader");
-        loader.classList.toggle('hide');
+        if (xhr.status === 200) {
+            let uInt8Array = new Uint8Array(this.response);
+            let db = new SQL.Database(uInt8Array);
+            let a = db.exec("SELECT * FROM Answer");
+            let q = db.exec("SELECT * FROM Question");
+
+            for (let i in a[0].values) {
+                let currentRecord = a[0].values[i];
+                let record = {
+                    "AnswerID": currentRecord[0],
+                    "QuestionID": currentRecord[1],
+                    "ADescription": currentRecord[2],
+                    "NextQID": currentRecord[3],
+                    "Points": currentRecord[4],
+                }
+                answers.push(record);
+            }
+
+            for (let i in q[0].values) {
+                let currentRecord = q[0].values[i];
+                let record = {
+                    "QuestionID": currentRecord[0],
+                    "ScenarioID": currentRecord[1],
+                    "QDescription": currentRecord[2]
+                }
+                questions.push(record);
+            }
+
+            load();
+            loader.classList.toggle('hide');
+        } else {
+            console.log("Error", xhr.statusText)
+            loader.innerHTML = "<br><br><br><br><br> There was a problem loading the database.<br><br>Please try again!";
+        }
     };
     xhr.send();
 }
