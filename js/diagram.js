@@ -22,7 +22,7 @@ function load() {
                 initialAutoScale: go.Diagram.Uniform, // zoom-to-fit on load
                 validCycle: go.Diagram.CycleNotDirected,  // don't allow loops
                 "undoManager.isEnabled": true,
-                padding: 150
+                padding: 250
             }
         );
 
